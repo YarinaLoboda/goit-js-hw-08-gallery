@@ -32,7 +32,7 @@ function onGalleryContainerClick(e) {
     
  
     showHideModalWindow();
-    document.addEventListener('keydown', onModalKeydown);
+    window.addEventListener('keydown', onModalKeydown);
     lightboxOverlay.addEventListener('click', onLightboxOverlayClick);
     lightboxButtonClose.addEventListener('click', onLightboxButtonClose);
     
@@ -52,7 +52,7 @@ function onLightboxButtonClose() {
     lightboxImage.src = '';
     lightboxImage.alt = '';
     currentNumber = -1;
-    document.removeEventListener('keydown', onModalKeydown);
+    window.removeEventListener('keydown', onModalKeydown);
     lightboxOverlay.removeEventListener('click', onLightboxOverlayClick);
     lightboxButtonClose.removeEventListener('click', onLightboxButtonClose);
 }
@@ -62,25 +62,38 @@ function showHideModalWindow() {
 }
 
 function getNextImage() {
+
     if ((currentNumber < (galleryItems.length - 1)) && (currentNumber >= 0)) {
        
-        const currentObj = galleryItems[++currentNumber];
-
-        lightboxImage.src = currentObj.original;
-        lightboxImage.alt = currentObj.description;
+        setImageAttributesModalWindow(galleryItems[++currentNumber]);
+        return;
     }
+
+    if (currentNumber >= (galleryItems.length - 1)) {
+        currentNumber = 0;
+        setImageAttributesModalWindow(galleryItems[currentNumber]);
+    }
+
 }
 
 function getPreviousImage() {
+    
     if ((currentNumber > 0) && (currentNumber <= (galleryItems.length - 1))) 
     {
-        const currentObj = galleryItems[--currentNumber];
-  
-        lightboxImage.src = currentObj.original;
-        lightboxImage.alt = currentObj.description;
-  
+       setImageAttributesModalWindow(galleryItems[--currentNumber]);
+        return;  
         }
        
+    if (currentNumber <= 0) {
+        currentNumber = galleryItems.length - 1;
+        setImageAttributesModalWindow(galleryItems[currentNumber]);
+    }
+
+}
+
+function setImageAttributesModalWindow(currentObj) {
+    lightboxImage.src = currentObj.original;
+    lightboxImage.alt = currentObj.description;
 }
 
 function onModalKeydown(e) {
